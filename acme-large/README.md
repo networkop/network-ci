@@ -2,7 +2,7 @@
 
 A simple 3-node topology
 
-![Alt text](./network/acme-small.jpg?raw=true "3-node topology")
+![Alt text](./network/acme-large.jpg?raw=true "14-node topology")
 
 Input information:
 
@@ -16,7 +16,7 @@ To Run:
 1. Create topology
 
 ```
-./1_build_topo.py
+./0_build_topo.py
 ```
 
 2. Verify test scenarios
