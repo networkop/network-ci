@@ -1,6 +1,6 @@
-# ACME-SMALL
+# ACME-LARGE
 
-A simple 3-node topology
+A large 14-node topology
 
 ![Alt text](./network/acme-large.jpg?raw=true "14-node topology")
 
