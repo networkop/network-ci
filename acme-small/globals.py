@@ -1,0 +1,6 @@
+NET_DIR = './network'
+CONF_DIR = './config'
+TMP_DIR = './tmp'
+TEST_DIR = './network/testing/'
+IP_REGEX = '([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+INTF_DOT1Q_REGEX = '\.[0-9]{1,3}'

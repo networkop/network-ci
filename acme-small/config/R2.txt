@@ -1,0 +1,1 @@
+!conf t!hostname R2!interface Ethernet0/0 no shut no shutno shutip address 12.12.12.2 255.255.255.0!interface Ethernet0/1 no shut no shutno shutip address 23.23.23.2 255.255.255.0!interface Loopback0 no shut no shutip address 10.0.0.2 255.255.255.255!router eigrp 100network 0.0.0.0!

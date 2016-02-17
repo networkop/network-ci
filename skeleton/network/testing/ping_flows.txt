@@ -1,0 +1,2 @@
+From R1, Loopback0 to R3, Ethernet0/0
+From R2 to R4
