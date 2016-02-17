@@ -67,11 +67,11 @@ class ConfAnalyzer(object):
 
     def extract_ip(self):
         result = {}
-        cwd = os.path.join(TMP_DIR, CONF_DIR)
-        for f in os.listdir(cwd):
+        # cwd = os.path.join(TMP_DIR, CONF_DIR)
+        for f in os.listdir(TMP_DIR):
             if f.endswith('.txt'):
                 dev_name = os.path.splitext(f)[0]
-                file_text = file_io.read_txt(cwd + '/' + f)
+                file_text = file_io.read_txt(TMP_DIR + '/' + f)
                 ips = self.get_ips(file_text)
                 result[dev_name] = ips
         file_io.write_yaml(TMP_DIR + '/' + 'ip.yml', result)

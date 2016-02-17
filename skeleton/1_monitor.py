@@ -1,9 +1,7 @@
 from tools.ping import Ping
 import tools.file_io as file_io
 from tools.unetlab import UNetLab
-import threading
-
-from globals import *
+from tools.globals import *
 import sys
 
 

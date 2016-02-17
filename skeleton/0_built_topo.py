@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import sys
-from globals import *
+from tools.globals import *
 import tools.file_io as file_io
 from tools.unetlab import UNetLab
 from tools.conf_analyzer import ConfAnalyzer

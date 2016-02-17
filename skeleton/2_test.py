@@ -4,7 +4,7 @@ from tools.unetlab import UNetLab
 from tools.testflows import TestFlows
 from tools.traceroute import Traceroute
 import tools.file_io as file_io
-from globals import *
+from tools.globals import *
 
 
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))

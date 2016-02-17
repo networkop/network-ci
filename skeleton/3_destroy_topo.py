@@ -2,7 +2,7 @@
 import sys
 import tools.file_io as file_io
 from tools.unetlab import UNetLab
-from globals import *
+from tools.globals import *
 
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))
 
