@@ -11,6 +11,6 @@
   From FW to MPLS-DMVPN via Backup-WAN, Backup-MPLS
   From FW to DMVPN-ONLY via Primary-WAN, Primary-DMVPN
   From FW to DMVPN-ONLY via Primary-WAN, Primary-DMVPN
-  From Cloud-1 to FW Loopback0 via Primary-WAN
+  From Cloud-1 to FW Loopback0 via Backup-WAN
   From Cloud-1 to MPLS-DMVPN via Backup-WAN, Backup-MPLS
 

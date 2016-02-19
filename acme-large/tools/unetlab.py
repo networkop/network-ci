@@ -46,7 +46,7 @@ class UNetLab(object):
         import threading
         processes = []
         for node_name in self.nodes:
-            conf = 'enable\r configure terminal\r no ip domain-lookup\r'
+            conf = 'no\renable\r configure terminal\r no ip domain-lookup\r'
             conf += file_io.read_txt('{0}/{1}.txt'.format(path, node_name))
             conf += '\rend\r write\r'
             process = threading.Thread(target=self.nodes[node_name].configure, args=(conf,))
