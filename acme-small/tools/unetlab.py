@@ -2,6 +2,7 @@ from restunl.unetlab import UnlServer
 from restunl.device import Router, Switch
 import file_io
 import decorators
+import os
 
 L3_IMAGE = 'L3-ADVENTERPRISEK9-LATEST.bin'
 L2_IMAGE = 'L2-ADVENTERPRISE-LATEST.bin'
@@ -11,6 +12,8 @@ class UNetLab(object):
 
     def __init__(self, ip='', user='', pwd='', lab_name=''):
         self.ip, self.user, self.pwd, self.lab_name = ip, user, pwd, lab_name
+        if os.environ.get('UNL_IP'):
+            self.ip = os.environ.get('UNL_IP')
         self.unl = UnlServer(self.ip)
         self.unl.login(self.user, self.pwd)
         self.lab = None
