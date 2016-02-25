@@ -1,5 +1,5 @@
 ---
-ip: 192.168.247.20
+ip: 192.168.247.133
 user: admin
 pwd: unl
 lab_name: network-ci-acme-small

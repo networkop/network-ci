@@ -1,7 +1,7 @@
 # Ignore comments
 ## Normal operations
 1 Failed None
-  From R1 to R3 via not R2, R3
+  From R1 to R3 via R2 or R4, R3
   From R2 to R3 via R3
   From R2 to R4 via R1 or R3
 
