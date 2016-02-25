@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import time
 from tools.unetlab import UNetLab
 from tools.testflows import TestFlows
 from tools.traceroute import Traceroute
@@ -33,6 +34,8 @@ def run_tests(tests, lab):
                 fail_node = fail_point.node(lab)
                 fail_node.configure(conf_shut_intf(fail_point.intf))
                 print("*** FAILURE CONDITION CREATED: {}".format(fail_point))
+                # wait for protocols to converge
+                time.sleep(15)
         for (from_point, to_point), flow_data in tests[(seq, fail_condition)].iteritems():
             flow = flow_data['parsed']
             print("*** TESTING FLOW FROM {} TO {}".format(from_point, to_point))
