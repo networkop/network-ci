@@ -2,11 +2,12 @@
 ## Normal operations
 1 Failed None
   From R1 to R3 via R2 or R4, R3
+  From R1,G0/0 to R3 via R2 or R4, R3
   From R2 to R3 via R3
   From R2 to R4 via R1 or R3
 
 # Failed link between R1 and R2
-2 Failed R1 Ethernet0/0
+2 Failed R1 Gig1/1
   From R1 to R2 via not R2, R3
   From R2 to R4 via not R1, R4
 

@@ -10,7 +10,7 @@ from tools.globals import *
 
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))
 TEST_FLOWS = TestFlows(file_io.read_txt('{}/traffic_flows.txt'.format(TEST_DIR)))
-
+INTF_CONV = file_io.read_yaml(INTF_CONV_FILE)
 
 def conf_shut_intf(intf):
     return conf_run_intf(intf, 'shutdown')
@@ -32,7 +32,12 @@ def run_tests(tests, lab):
         for fail_point in fail_condition:
             if not fail_point.dev == 'None':
                 fail_node = fail_point.node(lab)
-                fail_node.configure(conf_shut_intf(fail_point.intf))
+                try:
+                    lab_intf = INTF_CONV[fail_point.dev][fail_point.intf]
+                except KeyError as e:
+                    e.message = 'Could not find interface in conversion table: {}'.format(fail_node)
+                    raise
+                fail_node.configure(conf_shut_intf(lab_intf))
                 print("*** FAILURE CONDITION CREATED: {}".format(fail_point))
                 # wait for protocols to converge
                 time.sleep(15)
@@ -57,7 +62,8 @@ def run_tests(tests, lab):
         for fail_point in fail_condition:
             if not fail_point.dev == 'None':
                 fail_node = fail_point.node(lab)
-                fail_node.configure(conf_unshut_intf(fail_point.intf))
+                lab_intf = INTF_CONV[fail_point.dev][fail_point.intf]
+                fail_node.configure(conf_unshut_intf(lab_intf))
                 print("*** FAILURE CONDITION RESTORED: {}".format(fail_point))
     return failed
 

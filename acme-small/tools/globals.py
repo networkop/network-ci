@@ -10,6 +10,7 @@ NET_DIR = os.path.abspath(NET)
 CONF_DIR = os.path.abspath(CONF)
 TMP_DIR = os.path.abspath(TMP)
 TEST_DIR = os.path.abspath(os.path.join(NET, TEST))
+INTF_CONV_FILE = os.path.join(TMP_DIR, 'intf_conv' + '.yml')
 IP_REGEX = '([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
 INTF_DOT1Q_REGEX = '\.[0-9]{1,3}'
 IGNORE_CONFIG = ['class-map', 'policy-map', 'service', 'aaa', 'flow', 'ip nbar', 'logging',

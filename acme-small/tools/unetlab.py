@@ -26,6 +26,7 @@ class UNetLab(object):
 
     def build_topo(self, topology):
         real_topo = topology.real
+        intf_conv = file_io.read_yaml(INTF_CONV_FILE)
         for (a_name, a_intf), (b_name, b_intf) in real_topo.iteritems():
             a_device = Switch(a_name, L2_IMAGE) if 'sw' in a_name.lower() else Router(a_name, L3_IMAGE)
             b_device = Switch(b_name, L2_IMAGE) if 'sw' in b_name.lower() else Router(b_name, L3_IMAGE)
@@ -37,15 +38,25 @@ class UNetLab(object):
                 # print("*** NODE {} CREATED".format(b_name))
             node_a = self.nodes[a_name]
             node_b = self.nodes[b_name]
-            node_a.connect_node(a_intf, node_b, b_intf)
+            a_intf_lab = node_a.get_next_intf()
+            b_intf_lab = node_b.get_next_intf()
+            intf_conv.setdefault(a_name, {})[a_intf] = a_intf_lab
+            intf_conv.setdefault(b_name, {})[b_intf] = b_intf_lab
+            node_a.connect_node(a_intf_lab, node_b, b_intf_lab)
             # print("*** NODES {0} and {1} ARE CONNECTED".format(a_name, b_name))
+        file_io.write_yaml(INTF_CONV_FILE, intf_conv)
         return None
 
     def ext_connect(self, topo):
         ext_topo = topo.ext_net
+        intf_conv = file_io.read_yaml(INTF_CONV_FILE)
         for (node_name, node_intf), pnet in ext_topo.iteritems():
             ext_net = self.lab.create_net('cloud', net_type=pnet)
-            self.nodes[node_name].connect_interface(node_intf, ext_net)
+            the_node = self.nodes[node_name]
+            node_intf_lab = the_node.get_next_intf()
+            the_node.connect_interface(node_intf_lab, ext_net)
+            intf_conv.setdefault(node_name, {})[node_intf] = node_intf_lab
+        file_io.write_yaml(INTF_CONV_FILE, intf_conv)
         return None
 
     @decorators.timer

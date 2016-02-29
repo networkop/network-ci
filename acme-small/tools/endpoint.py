@@ -9,6 +9,10 @@ DEFAULT_INTF = 'Loopback0'
 DNS_RESOLVER = DNS(file_io.read_yaml('{}/ip.yml'.format(TMP_DIR)))
 
 
+class IncorrectEndpointFormat(Exception):
+    pass
+
+
 class Endpoint(object):
 
     def __init__(self, text):
@@ -25,9 +29,29 @@ class Endpoint(object):
         separators = ',|\s'
         seq = [word.strip() for word in re.split(separators, text)]
         if len(seq) > 1:
-            return seq[0], seq[1]
+            return seq[0], Endpoint.expand(seq[1])
         else:
             return seq[0], DEFAULT_INTF
+
+    @staticmethod
+    def expand(intf):
+        intf_re = re.match('(\w+)(\d+(/\d+)*)', intf)
+        try:
+            intf_name = intf_re.group(1)
+            intf_number = intf_re.group(2)
+        except IndexError:
+            raise IncorrectEndpointFormat('Could not split interface into name and number: {}'.format(intf))
+        if intf_name.startswith('G'):
+            intf_name = 'GigabitEthernet'
+        elif intf_name.startswith('T'):
+            intf_name = 'TenGigabitEthernet'
+        elif intf_name.startswith('E'):
+            intf_name = 'Ethernet'
+        elif intf_name.startswith('L'):
+            intf_name = 'Loopback'
+        else:
+            raise IncorrectEndpointFormat('Could not expand interface name: {}'.format(intf))
+        return intf_name + intf_number
 
     def __str__(self):
         return self.dev + '(' + self.intf + ')'

@@ -1,6 +1,6 @@
 # ACME-SMALL
 
-A simple 4-node topology
+A simple 4-node topology. 
 
 ![Alt text](./network/acme-small.jpg?raw=true "4-node topology")
 
