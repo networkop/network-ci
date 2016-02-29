@@ -23,26 +23,33 @@ pip install -r requirements.txt
 ## Workflow
 
 1. Build and configure topology
+    ```bash
+    ./0_build_topo.py
+    ```  
   
- `./0_build_topo.py`  
-  
-After this step you should be able to find the lab up and running on UNetLab server.
+  After this step you should be able to find the lab up and running on UNetLab server.
 
 2. Verify real-time connectivity while making configuration changes  
  
- `./1_monitor.py`  
+    ```bash
+    ./1_monitor.py
+    ```  
 
-You can change `./network/tests/ping_flows.txt` to change how the pings are run.
+  You can change `./network/tests/ping_flows.txt` to change how the pings are run.
 
 3. Verify test scenarios
 
-`./3_test.py`  
+    ```bash
+    ./3_test.py
+    ```  
 
-If any of the scenarios have failed, examine the output, adjust configuration as needed and re-run the tests.
+  If any of the scenarios have failed, examine the output, adjust configuration as needed and re-run the tests.
 
 4. Shutdown and delete the lab
 
-`./3_destroy_topo.py`  
+    ```bash
+    ./3_destroy_topo.py
+    ```  
 
 ## Caveats
 
