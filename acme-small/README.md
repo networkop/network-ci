@@ -1,35 +1,57 @@
 # ACME-SMALL
 
-A simple 3-node topology
+A simple 4-node topology
 
-![Alt text](./network/acme-small.jpg?raw=true "3-node topology")
+![Alt text](./network/acme-small.jpg?raw=true "4-node topology")
 
-Input information:
+## Prerequisites
 
-* topology in `topology.py`
-* unetlab in `unetlab.yml`
-* test scenarios in `traffic_flows.txt`
+* UNetLab server reachable from local machine
+* L2 and L3 IOU images with renamed to 'L2-LATEST.bin' and 'L3-LATEST.bin'
 
-To Run:
+## Install dependencies
 
-1. Create topology
-
-```
-./1_build_topo.py
+```bash
+pip install -r requirements.txt
 ```
 
-2. Verify test scenarios
+## Environment setup
 
-```
-./2_test.py
+Change `./network/tests/traffic_flows.txt` file to match the expected traffic paths
+
+## Workflow
+
+1. Build and configure topology
+
+```bash
+./0_build_topo.py
 ```
 
-3. Cleanup the lab
+After this step you should be able to find the lab up and running on UNetLab server.
+
+2. Verify real-time connectivity while making configuration changes
+ 
+ ```bash
+ ./1_monitor.py
+ ```
+
+You can change `./network/tests/ping_flows.txt` to change how the pings are run.
+
+3. Verify test scenarios
+
+```bash
+./3_test.py
+```
+
+If any of the scenarios have failed, examine the output, adjust configuration as needed and re-run the tests.
+
+4. Shutdown and delete the lab
 
 ```
 ./3_destroy_topo.py
 ```
 
+## Caveats
 
-
-
+* Designed only for IPv4 on Cisco IOS devices
+* 

@@ -1,12 +1,6 @@
-import file_io
-import os
 import re
+import file_io
 from globals import *
-
-IGNORE_PARTS = ['class-map', 'policy-map', 'service', 'aaa', 'flow', 'ip nbar', 'logging', 'crypto',
-                'snmp', 'banner', 'line', 'ntp', 'event', 'ip wccp', 'boot', 'username', 'archive',
-                'privilege', 'enable', 'tacacs', 'ip domain', 'ip ftp', 'ip http', 'ip sla', 'track',
-                'version', '! ']
 
 
 class ConfAnalyzer(object):
@@ -28,7 +22,7 @@ class ConfAnalyzer(object):
         new_text = []
         ignore_lines = False
         for line in text.splitlines():
-            if any([line.startswith(ignore) for ignore in IGNORE_PARTS]):
+            if any([line.startswith(ignore) for ignore in IGNORE_CONFIG]):
                 ignore_lines = True
             elif '!' in line:
                 new_text.append(line)

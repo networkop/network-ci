@@ -1,5 +1,6 @@
 from endpoint import Endpoint
 
+
 class TestFlows(object):
 
     def __init__(self, flows):

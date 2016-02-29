@@ -1,8 +1,8 @@
 from restunl.device import Router
-import file_io as file_io
-from dns import DNS
-import re
 from globals import *
+from dns import DNS
+import file_io
+import re
 
 
 DEFAULT_INTF = 'Loopback0'

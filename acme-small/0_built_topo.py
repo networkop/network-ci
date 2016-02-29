@@ -21,6 +21,8 @@ def main():
         print("*** CONNECTED TO UNL")
         UNL.build_topo(topology)
         print("*** TOPOLOGY IS BUILT")
+        UNL.ext_connect(topology)
+        print("*** EXTERNAL NET CONNECTED")
         UNL.start()
         print("*** NODES STARTED")
         UNL.configure_nodes(TMP_DIR)

@@ -1,11 +1,9 @@
 from restunl.unetlab import UnlServer
 from restunl.device import Router, Switch
+from globals import *
 import file_io
 import decorators
 import os
-
-L3_IMAGE = 'L3-ADVENTERPRISEK9-LATEST.bin'
-L2_IMAGE = 'L2-ADVENTERPRISE-LATEST.bin'
 
 
 class UNetLab(object):
@@ -41,6 +39,13 @@ class UNetLab(object):
             node_b = self.nodes[b_name]
             node_a.connect_node(a_intf, node_b, b_intf)
             # print("*** NODES {0} and {1} ARE CONNECTED".format(a_name, b_name))
+        return None
+
+    def ext_connect(self, topo):
+        ext_topo = topo.ext_net
+        for (node_name, node_intf), pnet in ext_topo.iteritems():
+            ext_net = self.lab.create_net('cloud', net_type=pnet)
+            self.nodes[node_name].connect_interface(node_intf, ext_net)
         return None
 
     @decorators.timer
