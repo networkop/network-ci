@@ -13,12 +13,12 @@ This is what these tools can do for you:
 
 These tools can be combined and used by CI/CD automation servers like Jenkins as I showed in my [blog](http://networkop.github.io/blog/2016/02/19/network-ci-intro/).
 
- ## Examples
+## Examples
 
- To show how these tools can be used, I've created the following sample networks ranging in size from 3 to 14 nodes.
+ To show how these tools can be used, I've created the following sample networks ranging in size from 4 to 14 nodes.
 
-* acme-small - simple 3-node topology
-* acme-large - 14-node enterprise data centre
+* [acme-small](/acme-small) - simple 4-node topology
+* [acme-large](/acme-large) - 14-node enterprise data centre
 
 ## Documentation
 
