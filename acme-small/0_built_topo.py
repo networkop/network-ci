@@ -15,7 +15,6 @@ def main():
         UNL.create_lab()
         print("*** BUILDING TOPOLOGY")
         UNL.build_topo(topology)
-        UNL.ext_connect(topology)
         print("*** NORMALIZING CONFIGURATION FILES")
         conf_files = ConfAnalyzer()
         conf_files.normalize(file_io.read_yaml(INTF_CONV_FILE))

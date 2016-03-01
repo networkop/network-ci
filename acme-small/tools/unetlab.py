@@ -43,7 +43,7 @@ class UNetLab(object):
             intf_conv.setdefault(a_name, {})[a_intf] = a_intf_lab
             intf_conv.setdefault(b_name, {})[b_intf] = b_intf_lab
             node_a.connect_node(a_intf_lab, node_b, b_intf_lab)
-            # print("*** NODES {0} and {1} ARE CONNECTED".format(a_name, b_name))
+            # print("*** NODES {} and {} ARE CONNECTED".format(a_name, b_name))
         file_io.write_yaml(INTF_CONV_FILE, intf_conv)
         return None
 

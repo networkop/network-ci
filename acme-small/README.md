@@ -7,7 +7,7 @@ A simple 4-node topology.
 ## Prerequisites
 
 * UNetLab server reachable from local machine
-* L2 and L3 IOU images with renamed to 'L2-LATEST.bin' and 'L3-LATEST.bin'
+* L2 and L3 IOU images under `/opt/unetlab/addons/iol/bin` renamed to 'L2-LATEST.bin' and 'L3-LATEST.bin'
 
 ## Install dependencies
 
@@ -18,6 +18,7 @@ pip install -r requirements.txt
 ## Environment setup
 
 * Change `./network/tests/traffic_flows.txt` file to match the expected traffic paths
+* Change `./network/tests/ping_flows.txt` file to match the destinations that need to be monitored
 * Change `./network/unetlab.yml` to match your UNetLab server environment
 
 ## Workflow
@@ -35,12 +36,12 @@ pip install -r requirements.txt
     ./1_monitor.py
     ```  
 
-  You can change `./network/tests/ping_flows.txt` to change how the pings are run.
+  Only failed pings will be displayed.
 
 3. Verify test scenarios
 
     ```bash
-    ./3_test.py
+    ./2_test.py
     ```  
 
   If any of the scenarios have failed, examine the output, adjust configuration as needed and re-run the tests.
@@ -54,4 +55,4 @@ pip install -r requirements.txt
 ## Caveats
 
 * Designed only for IPv4 on Cisco IOS devices
-*  You can override default image and directory names in  `./tools/globals.py` 
+* Assuming only 15 seconds for protocol reconvergence when creating failure conditions

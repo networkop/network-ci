@@ -11,6 +11,8 @@ from tools.globals import *
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))
 TEST_FLOWS = TestFlows(file_io.read_txt('{}/traffic_flows.txt'.format(TEST_DIR)))
 INTF_CONV = file_io.read_yaml(INTF_CONV_FILE)
+RECONVERGENCE_TIMER = 15
+
 
 def conf_shut_intf(intf):
     return conf_run_intf(intf, 'shutdown')
@@ -40,7 +42,7 @@ def run_tests(tests):
                 fail_node.configure(conf_shut_intf(lab_intf))
                 print("*** FAILURE CONDITION CREATED: {}".format(fail_point))
                 # wait for protocols to converge
-                time.sleep(15)
+                time.sleep(RECONVERGENCE_TIMER)
         for (from_point, to_point), flow_data in tests[(seq, fail_condition)].iteritems():
             flow = flow_data['parsed']
             print("*** TESTING FLOW FROM {} TO {}".format(from_point, to_point))
