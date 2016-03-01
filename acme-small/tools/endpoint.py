@@ -1,4 +1,4 @@
-from restunl.device import Router
+from restunl.device import IOL
 from globals import *
 from dns import DNS
 import file_io
@@ -17,6 +17,7 @@ class Endpoint(object):
 
     def __init__(self, text):
         self.dev, self.intf, self.ip = '', '', ''
+        self.node = None
         if DNS_RESOLVER.is_ip(text):
             self.dev, self.intf = DNS_RESOLVER.get(text)
             self.ip = text
@@ -56,5 +57,19 @@ class Endpoint(object):
     def __str__(self):
         return self.dev + '(' + self.intf + ')'
 
-    def node(self, lab):
-        return lab.get_node(Router(self.dev))
+    def get_node(self):
+        return self.node
+
+
+class ActiveEndpoint(Endpoint):
+
+    def __init__(self, text, lab):
+        super(ActiveEndpoint, self).__init__(text)
+        if not self.dev == 'None':
+            self.node = self._set_node(lab)
+        else:
+            self.node = None
+
+    def _set_node(self, lab):
+        return lab.get_node(IOL(self.dev))
+

@@ -1,5 +1,5 @@
 import re
-from endpoint import Endpoint
+from endpoint import ActiveEndpoint
 
 
 class Ping(object):
@@ -12,14 +12,15 @@ class Ping(object):
 
     def __init__(self, scenarios, lab):
         self.failed = dict()
-        self.scenarios = self._parse_scenarios(scenarios, lab)
+        self.lab = lab
+        self.scenarios = self._parse_scenarios(scenarios, self.lab)
 
     def run(self, lab):
         enable = 'enable\r\n'
         for from_point in self.scenarios:
             for to_point in self.scenarios[from_point]:
-                command = enable + 'ping {} {}'.format(to_point.ip, 'source ' + from_point.intf)
-                from_node = from_point.node(lab)
+                command = enable + 'ping {} {} repeat 2'.format(to_point.ip, 'source ' + from_point.ip)
+                from_node = from_point.get_node()
                 result = from_node.configure(command)
                 percentage = self._parse_result(result)
                 if not int(percentage) > 0:
@@ -43,8 +44,8 @@ class Ping(object):
             try:
                 _, flow = line.split('From ')
                 from_, to_ = flow.split(' to ')
-                from_point = Endpoint(from_)
-                to_point = Endpoint(to_)
+                from_point = ActiveEndpoint(from_, lab)
+                to_point = ActiveEndpoint(to_, lab)
                 result.setdefault(from_point, []).append(to_point)
             except:
                 print('*** Failed to parse scenario {}'.format(line))

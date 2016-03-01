@@ -24,14 +24,14 @@ def conf_run_intf(intf, command):
     return '\r\n'.join(['enable', 'conf t', 'interface {}'.format(intf), command, 'end'])
 
 
-def run_tests(tests, lab):
+def run_tests(tests):
     failed = False
     for seq, fail_condition in sorted(tests.keys()):
         print
         print("*** TESTING SCENARIO {}".format(seq))
         for fail_point in fail_condition:
             if not fail_point.dev == 'None':
-                fail_node = fail_point.node(lab)
+                fail_node = fail_point.get_node()
                 try:
                     lab_intf = INTF_CONV[fail_point.dev][fail_point.intf]
                 except KeyError as e:
@@ -44,8 +44,8 @@ def run_tests(tests, lab):
         for (from_point, to_point), flow_data in tests[(seq, fail_condition)].iteritems():
             flow = flow_data['parsed']
             print("*** TESTING FLOW FROM {} TO {}".format(from_point, to_point))
-            from_node = from_point.node(lab)
-            trace_command = 'traceroute {} {} numeric'.format(to_point.ip, 'source ' + from_point.intf)
+            from_node = from_point.get_node()
+            trace_command = 'traceroute {} {} numeric'.format(to_point.ip, 'source ' + from_point.ip)
             enable = 'enable\rconf t\rno logging console\rend\r'
             trace_result = from_node.configure(enable + trace_command)
             traceroute = Traceroute(trace_result)
@@ -61,7 +61,7 @@ def run_tests(tests, lab):
                 print ('*** SUCCESSFUL FLOW')
         for fail_point in fail_condition:
             if not fail_point.dev == 'None':
-                fail_node = fail_point.node(lab)
+                fail_node = fail_point.get_node()
                 lab_intf = INTF_CONV[fail_point.dev][fail_point.intf]
                 fail_node.configure(conf_unshut_intf(lab_intf))
                 print("*** FAILURE CONDITION RESTORED: {}".format(fail_point))
@@ -72,8 +72,8 @@ def main():
     try:
         lab = UNL.get_lab()
         print("*** CONNECTED TO UNL")
-        flows = TEST_FLOWS.parse()
-        failed = run_tests(flows, lab)
+        flows = TEST_FLOWS.parse(lab)
+        failed = run_tests(flows)
         print("*** TESTS COMPLETED")
     except:
         raise
