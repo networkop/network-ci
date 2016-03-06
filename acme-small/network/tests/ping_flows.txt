@@ -1,2 +1,5 @@
 From R3,G0/1 to R1,Loopback0
 From R2 to R4
+From R2 to R3
+From R2 to R1
+From R2 to R3,G0/1

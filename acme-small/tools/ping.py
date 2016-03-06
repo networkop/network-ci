@@ -1,5 +1,7 @@
 import re
 from endpoint import ActiveEndpoint
+import threading
+import time
 
 
 class Ping(object):
@@ -15,19 +17,30 @@ class Ping(object):
         self.lab = lab
         self.scenarios = self._parse_scenarios(scenarios, self.lab)
 
-    def run(self, lab):
-        enable = 'enable\r\n'
-        for from_point in self.scenarios:
-            for to_point in self.scenarios[from_point]:
-                command = enable + 'ping {} {} repeat 2'.format(to_point.ip, 'source ' + from_point.ip)
-                from_node = from_point.get_node()
-                result = from_node.configure(command)
-                percentage = self._parse_result(result)
-                if not int(percentage) > 0:
-                    self.failed.setdefault(str(from_point), set([])).add(str(to_point))
-                else:
-                    self.failed.setdefault(str(from_point), set([])).discard(str(to_point))
-                self.print_results()
+    def run(self, run):
+        enable = 'enable\r'
+        processes = []
+        while all(run):
+            for from_point in self.scenarios:
+                command = enable
+                for to_point in self.scenarios[from_point]:
+                    command += 'ping {} {} repeat 2'.format(to_point.ip, 'source ' + from_point.ip)
+                    process = threading.Thread(target=self._do_ping, args=(command, from_point, to_point))
+                    process.start()
+                    processes.append(process)
+                    time.sleep(0.3)
+            [p.join() for p in processes]
+            self.print_results()
+
+    def _do_ping(self, command, from_point, to_point):
+        from_node = from_point.get_node()
+        result = from_node.configure(command)
+        percentage = self._parse_result(result)
+        if not int(percentage) > 0:
+            self.failed.setdefault(str(from_point), set([])).add(str(to_point))
+        else:
+            self.failed.setdefault(str(from_point), set([])).discard(str(to_point))
+
 
     @staticmethod
     def _parse_result(output):

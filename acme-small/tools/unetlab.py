@@ -27,7 +27,7 @@ class UNetLab(object):
     def build_topo(self, topology):
         real_topo = topology.real
         intf_conv = file_io.read_yaml(INTF_CONV_FILE)
-        for (a_name, a_intf), (b_name, b_intf) in real_topo.iteritems():
+        for ((a_name, a_intf), (b_name, b_intf)) in real_topo:
             a_device = Switch(a_name, L2_IMAGE) if 'sw' in a_name.lower() else Router(a_name, L3_IMAGE)
             b_device = Switch(b_name, L2_IMAGE) if 'sw' in b_name.lower() else Router(b_name, L3_IMAGE)
             if a_name not in self.nodes:

@@ -7,12 +7,12 @@ import threading
 
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))
 PING_FLOWS = file_io.read_txt('{}/ping_flows.txt'.format(TEST_DIR))
-RUN = True
+RUN = [True]
 
 
 def key_press():
     global RUN
-    RUN = raw_input()
+    RUN[0] = raw_input()
 
 
 def main():
@@ -21,8 +21,7 @@ def main():
     thread = threading.Thread(target=key_press)
     thread.start()
     print('Starting pings. Press "Enter" to stop')
-    while RUN:
-        ping.run(lab)
+    ping.run(RUN)
     print('\rStopped'),
 
 if __name__ == '__main__':

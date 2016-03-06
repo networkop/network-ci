@@ -27,6 +27,7 @@ def conf_run_intf(intf, command):
 
 
 def run_tests(tests):
+    timer = RECONVERGENCE_TIMER
     failed = False
     for seq, fail_condition in sorted(tests.keys()):
         print
@@ -41,8 +42,10 @@ def run_tests(tests):
                     raise
                 fail_node.configure(conf_shut_intf(lab_intf))
                 print("*** FAILURE CONDITION CREATED: {}".format(fail_point))
-                # wait for protocols to converge
-                time.sleep(RECONVERGENCE_TIMER)
+            else:
+                timer = 0
+        # wait for protocols to converge
+        time.sleep(timer)
         for (from_point, to_point), flow_data in tests[(seq, fail_condition)].iteritems():
             flow = flow_data['parsed']
             print("*** TESTING FLOW FROM {} TO {}".format(from_point, to_point))
