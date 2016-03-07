@@ -4,8 +4,6 @@
   From R1 to R3 via R2 or R4, R3
   From R2 to R3 via R3
   From R2 to R4 via R1 or R3
-  # traffic engineering
-  From R1 to R3,G0/1 via not R4, R3
 
 # Failed link between R1 and R2
 2 Failed R1 Gig1/1, R2 Gig0/0
