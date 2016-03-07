@@ -27,9 +27,9 @@ def conf_run_intf(intf, command):
 
 
 def run_tests(tests):
-    timer = RECONVERGENCE_TIMER
     failed = False
     for seq, fail_condition in sorted(tests.keys()):
+        timer = RECONVERGENCE_TIMER
         print
         print("*** TESTING SCENARIO {}".format(seq))
         for fail_point in fail_condition:

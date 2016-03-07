@@ -10,7 +10,7 @@ class ConfAnalyzer(object):
         new_text = []
         for line in text.splitlines():
             for old_intf, new_intf in intf_conv.iteritems():
-                if re.match(r'^.*interface {}({})?$'.format(old_intf, INTF_DOT1Q_REGEX), line):
+                if re.match(r'^.*{}({})?$'.format(old_intf, INTF_DOT1Q_REGEX), line):
                     line = line.replace(old_intf, new_intf)
             if line.startswith('interface '):
                     line += '\r no shut'
