@@ -12,9 +12,10 @@ def main():
         UNL.destroy()
         print("*** LAB DESTROYED")
         for f in os.listdir(TMP_DIR):
-            file_path = os.path.join(TMP_DIR, f)
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
+            if not f.startswith('.'):
+                file_path = os.path.join(TMP_DIR, f)
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
         print("*** TMP DIRECTORY CLEANED UP")
     except:
         print ('*** Emulation Failed')

@@ -1,39 +1,58 @@
-# ACME-LARGE
+# ACME-SMALL
 
-A large 14-node topology
+A simple 4-node topology. 
 
-![Alt text](./network/acme-large.jpg?raw=true "14-node topology")
+![Alt text](./network/acme-small.jpg?raw=true "4-node topology")
 
-Input information:
+## Prerequisites
 
-* topology in `topology.py`
-* unetlab in `unetlab.yml`
-* per-device ip address information in `ip.yml`
-* test scenarios in `traffic_flows.txt`
+* UNetLab server reachable from local machine
+* L2 and L3 IOU images under `/opt/unetlab/addons/iol/bin` renamed to 'L2-LATEST.bin' and 'L3-LATEST.bin'
 
-To Run:
+## Install dependencies
 
-1. Create topology
-
-```
-./0_build_topo.py
+```bash
+pip install -r requirements.txt
 ```
 
-2. Verify test scenarios
+## Environment setup
 
-```
-./2_test.py
-```
+* Change `./network/tests/traffic_flows.txt` file to match the expected traffic paths
+* Change `./network/tests/ping_flows.txt` file to match the destinations that need to be monitored
+* Change `./network/unetlab.yml` to match your UNetLab server environment
 
-3. Cleanup the lab
+## Workflow
 
-```
-./3_destroy_topo.py
-```
+1. Build and configure topology
+    ```bash
+    ./0_build_topo.py
+    ```  
+  
+  After this step you should be able to find the lab up and running on UNetLab server.
 
-TODO Tasks:
+2. Verify real-time connectivity while making configuration changes  
+ 
+    ```bash
+    ./1_monitor.py
+    ```  
 
-1. Extract IP address information directly from configuration files
-2. Extract topology from device interface description from configuration files.
+  Only failed pings will be displayed.
 
+3. Verify test scenarios
 
+    ```bash
+    ./2_test.py
+    ```  
+
+  If any of the scenarios have failed, examine the output, adjust configuration as needed and re-run the tests.
+
+4. Shutdown and delete the lab
+
+    ```bash
+    ./3_destroy_topo.py
+    ```  
+
+## Caveats
+
+* Designed only for IPv4 on Cisco IOS devices
+* Assuming only 15 seconds for protocol reconvergence when creating failure conditions

@@ -1,6 +1,6 @@
 import re
-# from globals import *
-IP_REGEX = '([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+from globals import *
+
 
 class DNS(object):
 
