@@ -1,0 +1,33 @@
+hostname Primary-DMVPN
+!
+!
+!
+interface Loopback0
+ ip address 10.1.2.7 255.255.255.255
+!
+interface GigabitEthernet0/1
+ description ** DMVPN **
+ ip address 10.1.11.1 255.255.255.0
+!
+!
+interface GigabitEthernet0/3
+ ip address 10.1.1.5 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+!
+router eigrp 2
+ network 10.1.11.0 0.0.0.255
+ default-metric 1 1 1 1 1
+ redistribute ospf 1
+ passive-interface default
+ no passive-interface GigabitEthernet0/1
+!
+!
+router ospf 1
+ network 0.0.0.0 255.255.255.255 area 0
+ redistribute eigrp 2 subnets metric 60
+ passive-interface default
+ no passive-interface GigabitEthernet0/3
+!

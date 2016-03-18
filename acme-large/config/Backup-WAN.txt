@@ -1,0 +1,37 @@
+
+hostname Standby-WAN
+!
+!
+interface Loopback0
+ ip address 10.1.3.1 255.255.255.255
+!
+interface GigabitEthernet0/0
+ description MPLS-WAN
+ ip address 172.16.0.70 255.255.255.252
+!
+interface GigabitEthernet0/3
+ description Standby-CORE-SW (G0/1)
+!
+interface GigabitEthernet0/3.210
+ encapsulation dot1Q 210
+ ip address 10.1.1.13 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+!
+router ospf 1
+ networ 0.0.0.0 255.255.255.255 area 0
+ passive-interface default
+ redistribute bgp 65529 subnets metric 40
+ no passive-interface GigabitEthernet0/3.210
+!
+router bgp 65529
+ network 0.0.0.0
+ redistribute ospf 1 
+ neighbor 172.16.0.69 remote-as 65530
+ neighbor 172.16.0.69 route-map AS-PREPEND
+!
+route-map AS-PREPEND permit 10
+ set as-path prepend 65529 65529
+!

@@ -1,0 +1,32 @@
+
+hostname PRIMARY-WAN
+!
+interface Loopback0
+ ip address 10.1.2.1 255.255.255.255
+!
+interface GigabitEthernet0/0
+ description MPLS-WAN
+ ip address 172.16.0.9 255.255.255.252
+!
+interface GigabitEthernet0/3
+ description Primary-CORE-SW (G0/1)
+!
+interface GigabitEthernet0/3.110
+ encapsulation dot1Q 110
+ ip address 10.1.1.1 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+!
+router ospf 1
+ networ 0.0.0.0 255.255.255.255 area 0
+ passive-interface default
+ redistribute bgp 65529 subnets
+ no passive-interface GigabitEthernet0/3.110
+!
+router bgp 65529
+ network 0.0.0.0
+ redistribute ospf 1
+ neighbor 172.16.0.10 remote-as 65530
+!

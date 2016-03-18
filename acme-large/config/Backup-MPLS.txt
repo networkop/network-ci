@@ -1,0 +1,48 @@
+hostname Backup-MPLS
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ ip address 172.16.0.69 255.255.255.252
+!
+interface GigabitEthernet0/1
+ ip address 172.16.0.73 255.255.255.252
+!
+interface GigabitEthernet0/2
+ ip address 172.16.0.77 255.255.255.252
+!
+!
+router bgp 65530
+ bgp log-neighbor-changes
+ timers bgp 2 6
+ neighbor 172.16.0.70 remote-as 65529
+ neighbor 172.16.0.74 remote-as 65531
+ neighbor 172.16.0.78 remote-as 65532
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!

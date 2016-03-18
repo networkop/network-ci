@@ -1,0 +1,158 @@
+====================================================
+BGP PEERINGS
+====================================================
+
+--- PRIMARY-WAN, PRIMARY-DMVPN ------
+router bgp 65529
+ neighbor 10.1.2.2 remote-as 65529
+ neighbor 10.1.2.2 update-source Loopback0
+ neighbor 10.1.2.2 send-community both
+
+
+--- CLOUD-1, CLOUD-2 -------
+router bgp 65529
+ bgp log-neighbor-changes
+ neighbor 10.1.2.2 remote-as 65529
+ neighbor 10.1.2.2 update-source Loopback0
+ neighbor 10.1.2.2 send-community both
+ neighbor 10.1.3.2 remote-as 65529
+ neighbor 10.1.3.2 update-source Loopback0
+ neighbor 10.1.3.2 send-community both
+
+
+--- Backup-WAN, Backup-DMVPN -----------
+router bgp 65529
+ bgp log-neighbor-changes
+ neighbor 10.1.3.2 remote-as 65529
+ neighbor 10.1.3.2 update-source Loopback0
+ neighbor 10.1.3.2 send-community both
+
+
+--- PRIMARY-CORE -------
+router bgp 65529
+ template peer-policy RR-CLIENT
+  route-reflector-client
+  send-community both
+ exit-peer-policy
+ !
+ template peer-session iBGP
+  remote-as 65529
+  timers 5 15
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp cluster-id 10.1.2.2
+ bgp log-neighbor-changes
+ neighbor 10.1.2.1 remote-as 65529
+ neighbor 10.1.2.1 inherit peer-session iBGP
+ neighbor 10.1.2.1 inherit peer-policy RR-CLIENT
+ neighbor 10.1.2.7 remote-as 65529
+ neighbor 10.1.2.7 inherit peer-session iBGP
+ neighbor 10.1.2.7 inherit peer-policy RR-CLIENT
+ neighbor 10.1.3.2 remote-as 65529
+ neighbor 10.1.3.2 inherit peer-session iBGP
+ neighbor 10.1.3.2 inherit peer-policy RR-CLIENT
+ neighbor 10.4.0.1 remote-as 65529
+ neighbor 10.4.0.1 inherit peer-session iBGP
+ neighbor 10.4.0.1 inherit peer-policy RR-CLIENT
+ neighbor 10.5.0.1 remote-as 65529
+ neighbor 10.5.0.1 inherit peer-session iBGP
+ neighbor 10.5.0.1 inherit peer-policy RR-CLIENT
+
+
+---- Backup-CORE --------
+router bgp 65529
+ template peer-policy RR-CLIENT
+  route-reflector-client
+  send-community both
+ exit-peer-policy
+ !
+ template peer-session iBGP
+  remote-as 65529
+  timers 5 15
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp cluster-id 10.1.3.2
+ bgp log-neighbor-changes
+ neighbor 10.1.2.2 remote-as 65529
+ neighbor 10.1.2.2 inherit peer-session iBGP
+ neighbor 10.1.2.2 inherit peer-policy RR-CLIENT
+ neighbor 10.1.3.1 remote-as 65529
+ neighbor 10.1.3.1 inherit peer-session iBGP
+ neighbor 10.1.3.1 inherit peer-policy RR-CLIENT
+ neighbor 10.1.3.7 remote-as 65529
+ neighbor 10.1.3.7 inherit peer-session iBGP
+ neighbor 10.1.3.7 inherit peer-policy RR-CLIENT
+ neighbor 10.4.0.1 remote-as 65529
+ neighbor 10.4.0.1 inherit peer-session iBGP
+ neighbor 10.4.0.1 inherit peer-policy RR-CLIENT
+ neighbor 10.5.0.1 remote-as 65529
+ neighbor 10.5.0.1 inherit peer-session iBGP
+ neighbor 10.5.0.1 inherit peer-policy RR-CLIENT
+
+
+====================================================
+ROUTE INJECTION
+====================================================
+--- PRIMARY-WAN, BACKUP-WAN ------
+router bgp 65529
+ no network 0.0.0.0
+ no redistribute ospf 1
+router ospf 1
+ no redistribute bgp 65529 subnets
+
+--- PRIMARY-DMVPN, BACKUP-DMVPN ------
+ip community-list standard ICL-DC-DMVPN permit 65529:2
+route-map RM-EIGRP-BGP deny 10
+ match tag 65529
+route-map RM-EIGRP-BGP permit 1000
+ set community 65529:2
+route-map RM-BGP-EIGRP deny 10
+ match community ICL-DC-DMVPN
+route-map RM-BGP-EIGRP permit 1000
+ set tag 65529
+router ospf 1
+ no redistribute eigrp 2
+router eigrp 2
+ no redistribute ospf 1
+ redistribute bgp 65529 route-map RM-BGP-EIGRP
+router bgp 65529
+ redistribute eigrp 2 route-map RM-EIGRP-BGP
+ bgp redistribute-internal
+
+--- CLOUD-1 --------
+router bgp 65529
+ network 10.4.0.0 mask 255.255.0.0
+
+--- CLOUD-2 --------
+router bgp 65529
+ network 10.5.0.0 mask 255.255.0.0
+
+--- PRIMARY-CORE, BACKUP-CORE ---------
+router bgp 65529
+ template peer-policy RR-CLIENT
+  default-originate
+router ospf 1
+ no default-information originate
+
+====================================================
+TRAFFIC ENGINEERING POLICIES
+====================================================
+
+--- PRIMARY-WAN -------
+route-map RM-FIRST-IN permit 10
+ set local-preference 200
+router bgp 65529
+ neighbor 172.16.0.10 route-map RM-FIRST-IN in
+
+--- BACKUP-WAN -------
+route-map RM-SECOND-IN permit 10
+ set local-preference 150
+router bgp 65529
+ neighbor 172.16.0.69 route-map RM-SECOND-IN in
+
+--- PRIMARY-DMVPN -------
+route-map RM-EIGRP-BGP permit 1000
+ set local-preference 125
+

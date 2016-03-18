@@ -1,0 +1,22 @@
+
+!
+hostname Primary-MPLS
+!
+!
+interface GigabitEthernet0/0
+ ip address 172.16.0.10 255.255.255.252
+!
+interface GigabitEthernet0/1
+ ip address 172.16.0.13 255.255.255.252
+!
+interface GigabitEthernet0/2
+ ip address 172.16.0.17 255.255.255.252
+!
+!
+router bgp 65530
+ bgp log-neighbor-changes
+ timers bgp 2 6
+ neighbor 172.16.0.9 remote-as 65529
+ neighbor 172.16.0.14 remote-as 65531
+ neighbor 172.16.0.18 remote-as 65532
+!

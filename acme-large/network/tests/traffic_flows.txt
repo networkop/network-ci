@@ -1,0 +1,25 @@
+## Normal operations
+1 Failed None
+  From FW to MPLS-DMVPN via Primary-WAN, Primary-MPLS
+  From FW to DMVPN-ONLY via Primary-CORE-SW, Primary-DMVPN
+  From FW to MPLS-ONLY via Primary-WAN, Primary-MPLS
+  From Cloud-1 to FW Loopback0 via Primary-CORE-SW
+  From Cloud-2 to MPLS-DMVPN via Primary-WAN, Primary-MPLS
+
+# Failed link between to MPLS in Primary DC
+2 Failed Primary-WAN Gig0/0, Primary-MPLS Gig0/0
+  From FW to MPLS-DMVPN via Backup-WAN, Backup-MPLS
+  From FW to DMVPN-ONLY via Primary-CORE-SW, Primary-DMVPN
+  From FW to MPLS-ONLY via Backup-WAN, Backup-MPLS
+  From Cloud-1 to FW Loopback0 via Primary-CORE-SW
+  From Cloud-1 to MPLS-DMVPN via Backup-WAN, Backup-MPLS
+
+# Failed Primary Core Switch
+3 Failed Primary-CORE-SW G0/1, Primary-CORE-SW G0/2, Primary-CORE-SW G0/3, Primary-CORE-SW G0/4, Primary-CORE-SW G0/5, Primary-CORE-SW G0/6
+  From FW to MPLS-DMVPN via not Primary-CORE-SW, Backup-WAN, Backup-MPLS
+  From FW to DMVPN-ONLY via not Primary-CORE-SW, Backup-DMVPN
+  From FW to MPLS-ONLY via not Primary-CORE-SW, Backup-WAN, Backup-MPLS
+  From Cloud-1 to FW Loopback0 via not Primary-CORE-SW
+  From Cloud-1 to MPLS-DMVPN via Backup-CORE-SW, Backup-WAN, Backup-MPLS
+
+

@@ -1,0 +1,108 @@
+
+hostname Standby-CORE-SW
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast bpduguard default
+!
+!
+!
+!
+vlan internal allocation policy ascending
+!
+vlan 210
+ name OSPF-WAN
+!
+vlan 220
+ name OSPF-DMVPN
+!
+vlan 30
+ name OSPF-CORE
+!
+vlan 40
+ name FW
+!
+interface Loopback0
+ ip address 10.1.3.2 255.255.255.255
+!
+interface GigabitEthernet0/1
+ description STANDBY-WAN (Gi0/3)
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ description PRIMARY-DMVPN (G0/3)
+ switchport access vlan 220
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/3
+ description FW
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet0/4
+ no switchport
+ description Cloud-2
+ ip address 10.1.4.25 255.255.255.252
+ ip ospf cost 1000
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+interface GigabitEthernet0/5
+ description Cloud-1
+ no switchport
+ ip address 10.1.4.9 255.255.255.252
+ ip ospf cost 1000
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+interface GigabitEthernet0/6
+ switchport trunk allowed vlan 30,40
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Vlan210
+ ip address 10.1.1.14 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+interface Vlan220
+ ip address 10.1.1.18 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+interface Vlan30
+ ip address 10.1.1.10 255.255.255.252
+ ip ospf network point-to-point
+ ip ospf hello-interval 5
+ ip ospf dead-interval 15
+!
+interface Vlan40
+ description FW
+ ip address 10.1.1.35 255.255.255.224
+ no ip redirects
+ no ip proxy-arp
+ ip ospf cost 1000
+ standby version 2
+ standby 20 ip 10.1.1.33
+ standby 20 preempt
+!
+router ospf 1
+ network 0.0.0.0 255.255.255.255 area 0
+ default-information originate metric 20
+ passive-interface default
+ no passive-interface GigabitEthernet0/4
+ no passive-interface GigabitEthernet0/5
+ no passive-interface Vlan210
+ no passive-interface Vlan220
+ no passive-interface Vlan30
+!
+ip route 0.0.0.0 0.0.0.0 10.1.1.62
+!
+!workaround the IOU bug
+no ip cef
+!

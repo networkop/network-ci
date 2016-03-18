@@ -1,8 +1,8 @@
-# ACME-SMALL
+# ACME-LARGE
 
-A simple 4-node topology. 
+A large 14-node topology. 
 
-![Alt text](./network/acme-small.jpg?raw=true "4-node topology")
+![Alt text](./network/acme-large.jpg?raw=true "4-node topology")
 
 ## Prerequisites
 
@@ -30,7 +30,8 @@ pip install -r requirements.txt
   
   After this step you should be able to find the lab up and running on UNetLab server.
 
-2. Verify real-time connectivity while making configuration changes  
+2. Verify real-time connectivity while making configuration changes. Example of changes required 
+   to convert from OSPF to BGP can be found in `./network/ospf-bgp.txt` file
  
     ```bash
     ./1_monitor.py

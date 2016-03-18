@@ -1,0 +1,147 @@
+!
+! Last configuration change at 06:05:56 UTC Fri Feb 12 2016
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname FW
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+bridge irb
+!
+!
+!
+!
+interface Loopback0
+ ip address 8.8.8.8 255.255.255.255
+!
+interface Loopback1
+ no ip address
+!
+interface Loopback2
+ no ip address
+!
+interface Loopback100
+ no ip address
+!
+interface Ethernet0/0
+ no ip address
+!
+interface Ethernet0/0.40
+ encapsulation dot1Q 40
+ bridge-group 1
+!
+interface Ethernet0/1
+ no ip address
+!
+interface Ethernet0/1.40
+ encapsulation dot1Q 40
+ bridge-group 1
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+interface BVI1
+ ip address 10.1.1.62 255.255.255.224
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.1.1.33
+!
+!
+!
+!
+control-plane
+!
+bridge 1 protocol ieee
+bridge 1 route ip
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+!
