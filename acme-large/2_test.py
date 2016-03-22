@@ -29,7 +29,6 @@ def conf_run_intf(intf, command):
 def run_tests(tests):
     failed = False
     for seq, fail_condition in sorted(tests.keys()):
-        timer = RECONVERGENCE_TIMER
         print
         print("*** TESTING SCENARIO {}".format(seq))
         for fail_point in fail_condition:
@@ -41,10 +40,8 @@ def run_tests(tests):
                     lab_intf = fail_point.intf
                 fail_node.configure(conf_shut_intf(lab_intf))
                 print("*** FAILURE CONDITION CREATED: {}".format(fail_point))
-            else:
-                timer = 0
         # wait for protocols to converge
-        time.sleep(timer)
+        time.sleep(RECONVERGENCE_TIMER)
         for (from_point, to_point), flow_data in tests[(seq, fail_condition)].iteritems():
             flow = flow_data['parsed']
             print("*** TESTING FLOW FROM {} TO {}".format(from_point, to_point))
@@ -79,8 +76,6 @@ def main():
     try:
         lab = UNL.get_lab()
         print("*** CONNECTED TO UNL")
-        # wait for routing to converge
-        time.sleep(15)
         flows = TEST_FLOWS.parse(lab)
         failed = run_tests(flows)
         print("*** TESTS COMPLETED")

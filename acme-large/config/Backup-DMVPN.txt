@@ -18,13 +18,30 @@ interface GigabitEthernet0/3
 router eigrp 2
  network 10.1.12.0 0.0.0.255
  default-metric 1 1 1 1 1
- redistribute ospf 1 
+ redistribute bgp 65529 route-map RM-BGP-EIGRP
  passive-interface default
  no passive-interface GigabitEthernet0/1
 !
 router ospf 1
  network 0.0.0.0 255.255.255.255 area 0
- redistribute eigrp 2 subnets metric 80
  passive-interface default
  no passive-interface GigabitEthernet0/3
+!
+router bgp 65529
+ bgp log-neighbor-changes
+ neighbor 10.1.3.2 remote-as 65529
+ neighbor 10.1.3.2 update-source Loopback0
+ neighbor 10.1.3.2 send-community both
+ redistribute eigrp 2 route-map RM-EIGRP-BGP
+ bgp redistribute-internal
+!
+ip community-list standard ICL-DC-DMVPN permit 65529:2
+route-map RM-EIGRP-BGP deny 10
+ match tag 65529
+route-map RM-EIGRP-BGP permit 1000
+ set community 65529:2
+route-map RM-BGP-EIGRP deny 10
+ match community ICL-DC-DMVPN
+route-map RM-BGP-EIGRP permit 1000
+ set tag 65529
 !

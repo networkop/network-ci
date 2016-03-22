@@ -93,13 +93,43 @@ interface Vlan40
 !
 router ospf 1
  network 0.0.0.0 255.255.255.255 area 0
- default-information originate metric 20
  passive-interface default
  no passive-interface GigabitEthernet0/4
  no passive-interface GigabitEthernet0/5
  no passive-interface Vlan210
  no passive-interface Vlan220
  no passive-interface Vlan30
+!
+router bgp 65529
+ template peer-policy RR-CLIENT
+  route-reflector-client
+  send-community both
+  default-originate
+ exit-peer-policy
+ !
+ template peer-session iBGP
+  remote-as 65529
+  timers 5 15
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp cluster-id 10.1.3.2
+ bgp log-neighbor-changes
+ neighbor 10.1.2.2 remote-as 65529
+ neighbor 10.1.2.2 inherit peer-session iBGP
+ neighbor 10.1.2.2 inherit peer-policy RR-CLIENT
+ neighbor 10.1.3.1 remote-as 65529
+ neighbor 10.1.3.1 inherit peer-session iBGP
+ neighbor 10.1.3.1 inherit peer-policy RR-CLIENT
+ neighbor 10.1.3.7 remote-as 65529
+ neighbor 10.1.3.7 inherit peer-session iBGP
+ neighbor 10.1.3.7 inherit peer-policy RR-CLIENT
+ neighbor 10.4.0.1 remote-as 65529
+ neighbor 10.4.0.1 inherit peer-session iBGP
+ neighbor 10.4.0.1 inherit peer-policy RR-CLIENT
+ neighbor 10.5.0.1 remote-as 65529
+ neighbor 10.5.0.1 inherit peer-session iBGP
+ neighbor 10.5.0.1 inherit peer-policy RR-CLIENT
 !
 ip route 0.0.0.0 0.0.0.0 10.1.1.62
 !
