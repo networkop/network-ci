@@ -1,2 +1,2 @@
-restunlclient==0.0.9
-pyyaml==3.10
+restunlclient
+pyyaml

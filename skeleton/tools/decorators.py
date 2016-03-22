@@ -1,4 +1,5 @@
 import time
+import os
 
 
 def timer(func):
@@ -17,6 +18,9 @@ def progress(function):
 
     def inner(*args, **kwargs):
         run = True
+        # if running in Jenkins do not decorate
+        if os.environ.get('UNL_IP'):
+            return function(*args, **kwargs)
 
         def print_progress(index=0):
             while run:

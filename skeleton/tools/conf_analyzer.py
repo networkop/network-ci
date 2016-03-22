@@ -1,12 +1,6 @@
-import file_io
-import os
 import re
+import file_io
 from globals import *
-
-IGNORE_PARTS = ['class-map', 'policy-map', 'service', 'aaa', 'flow', 'ip nbar', 'logging', 'crypto',
-                'snmp', 'banner', 'line', 'ntp', 'event', 'ip wccp', 'boot', 'username', 'archive',
-                'privilege', 'enable', 'tacacs', 'ip domain', 'ip ftp', 'ip http', 'ip sla', 'track',
-                'version', '! ']
 
 
 class ConfAnalyzer(object):
@@ -16,7 +10,7 @@ class ConfAnalyzer(object):
         new_text = []
         for line in text.splitlines():
             for old_intf, new_intf in intf_conv.iteritems():
-                if re.match(r'^.*interface {}({})?$'.format(old_intf, INTF_DOT1Q_REGEX), line):
+                if re.match(r'^.*{}({})?$'.format(old_intf, INTF_DOT1Q_REGEX), line):
                     line = line.replace(old_intf, new_intf)
             if line.startswith('interface '):
                     line += '\r no shut'
@@ -28,7 +22,7 @@ class ConfAnalyzer(object):
         new_text = []
         ignore_lines = False
         for line in text.splitlines():
-            if any([line.startswith(ignore) for ignore in IGNORE_PARTS]):
+            if any([line.startswith(ignore) for ignore in IGNORE_CONFIG]):
                 ignore_lines = True
             elif '!' in line:
                 new_text.append(line)
@@ -51,27 +45,28 @@ class ConfAnalyzer(object):
     @staticmethod
     def get_ips(text):
         result = {}
-        ip, intf_name = None, None
+        ip_list, intf_name = [], None
         for line in text.splitlines():
             if re.search(r'^interface (.*)$', line):
                 intf_name = re.search(r'^interface (.*)$', line).group(1)
             elif intf_name and re.search(r'{}'.format(IP_REGEX), line):
                 ip = re.search(r'{}'.format(IP_REGEX), line).group(1)
+                ip_list.append(ip)
             elif intf_name and re.search(r'shut', line):
-                ip = None
+                ip_list = []
             elif intf_name and re.search(r'!', line):
-                if ip:
-                    result.setdefault(intf_name, []).append(ip)
-                ip, intf_name = None, None
+                if ip_list:
+                    result[intf_name] = ip_list
+                ip_list, intf_name = [], None
         return result
 
     def extract_ip(self):
         result = {}
-        # cwd = os.path.join(TMP_DIR, CONF_DIR)
-        for f in os.listdir(TMP_DIR):
+        cwd = os.path.join(TMP_DIR, CONF_DIR)
+        for f in os.listdir(cwd):
             if f.endswith('.txt'):
                 dev_name = os.path.splitext(f)[0]
-                file_text = file_io.read_txt(TMP_DIR + '/' + f)
+                file_text = file_io.read_txt(cwd + '/' + f)
                 ips = self.get_ips(file_text)
                 result[dev_name] = ips
         file_io.write_yaml(TMP_DIR + '/' + 'ip.yml', result)

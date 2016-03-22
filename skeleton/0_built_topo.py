@@ -7,22 +7,22 @@ from tools.conf_analyzer import ConfAnalyzer
 from network import topology
 
 UNL = UNetLab(**file_io.read_yaml('{}/unetlab.yml'.format(NET_DIR)))
-INTF_CONV = file_io.read_yaml('{}/intf_conv.yml'.format(NET_DIR))
 
 
 def main():
     try:
-        conf_files = ConfAnalyzer()
-        conf_files.normalize(INTF_CONV)
-        print("*** CONFIG FILES NORMALIZED")
-        conf_files.extract_ip()
-        print("*** IPs EXTRACTED")
+        print("*** CONNECTING TO UNL")
         UNL.create_lab()
-        print("*** CONNECTED TO UNL")
+        print("*** BUILDING TOPOLOGY")
         UNL.build_topo(topology)
-        print("*** TOPOLOGY IS BUILT")
+        print("*** NORMALIZING CONFIGURATION FILES")
+        conf_files = ConfAnalyzer()
+        conf_files.normalize(file_io.read_yaml(INTF_CONV_FILE))
+        print("*** EXTRACTING IP")
+        conf_files.extract_ip()
+        print("*** STARTING ALL NODES")
         UNL.start()
-        print("*** NODES STARTED")
+        print("*** CONFIGURING NODES")
         UNL.configure_nodes(TMP_DIR)
         print("*** ALL NODES CONFIGURED")
     except Exception:

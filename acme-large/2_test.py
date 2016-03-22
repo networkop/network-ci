@@ -79,6 +79,8 @@ def main():
     try:
         lab = UNL.get_lab()
         print("*** CONNECTED TO UNL")
+        # wait for routing to converge
+        time.sleep(15)
         flows = TEST_FLOWS.parse(lab)
         failed = run_tests(flows)
         print("*** TESTS COMPLETED")
